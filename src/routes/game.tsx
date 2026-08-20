@@ -16,13 +16,13 @@ export const Route = createFileRoute("/game")({
   },
   head: () => ({
     meta: [
-      { title: "Clock Running — ClockMate" },
+      { title: "Clock Running — SchackMate" },
       {
         name: "description",
         content:
           "Live chess clock: tap your side to end your move, add the Fischer increment and start your opponent's clock.",
       },
-      { property: "og:title", content: "Clock Running — ClockMate" },
+      { property: "og:title", content: "Clock Running — SchackMate" },
       {
         property: "og:description",
         content: "Tap your side to end your move and start your opponent's clock.",
