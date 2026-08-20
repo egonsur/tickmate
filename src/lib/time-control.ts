@@ -61,7 +61,8 @@ export function formatControl(tc: TimeControl): string {
   const totalSeconds = Math.round(tc.baseMs / 1000);
   const m = Math.floor(totalSeconds / 60);
   const s = totalSeconds % 60;
-  const base = s === 0 ? `${m}` : `${m}:${String(s).padStart(2, "0")}`;
   const inc = Math.round(tc.incrementMs / 1000);
-  return inc > 0 ? `${base}+${inc}` : `${base}:00`.replace(/^(\d+):00:00$/, "$1:00");
+  const base = s === 0 ? `${m}` : `${m}:${String(s).padStart(2, "0")}`;
+  if (inc > 0) return `${base}+${inc}`;
+  return s === 0 ? `${m}:00` : `${m}:${String(s).padStart(2, "0")}`;
 }
