@@ -7,13 +7,13 @@ import { loadPrefs, savePrefs, type Prefs } from "@/lib/prefs";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "ClockMate — Chess Clock for Over-the-Board Play" },
+      { title: "SchackMate — Chess Clock for Over-the-Board Play" },
       {
         name: "description",
         content:
           "A precise offline chess clock: bullet, blitz and rapid presets, Fischer increment, low-time warnings and flag fall. Companion app to SchackMate.",
       },
-      { property: "og:title", content: "ClockMate — Chess Clock for Over-the-Board Play" },
+      { property: "og:title", content: "SchackMate — Chess Clock for Over-the-Board Play" },
       {
         property: "og:description",
         content:
@@ -61,9 +61,18 @@ function Home() {
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col bg-background">
       <header className="border-b-2 border-foreground px-6 pt-8 pb-5">
         <p className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase">
-          Companion Instrument
+          Alocai's Chess Clock
         </p>
-        <h1 className="text-4xl font-black tracking-tighter">CLOCKMATE</h1>
+        <h1 className="flex items-center gap-2 text-4xl font-black tracking-tighter">
+          <img
+            src="/knight.png"
+            alt="SchackMate knight"
+            width={36}
+            height={36}
+            className="h-9 w-9 object-contain"
+          />
+          SchackMate
+        </h1>
       </header>
 
       <div className="flex-1 space-y-8 overflow-y-auto p-4">
