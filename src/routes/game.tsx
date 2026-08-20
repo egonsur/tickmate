@@ -7,8 +7,8 @@ import { useWakeLock } from "@/hooks/use-wake-lock";
 
 export const Route = createFileRoute("/game")({
   validateSearch: (search: Record<string, unknown>) => {
-    const b = Number(search.b);
-    const i = Number(search.i);
+    const b = Number(search["b"]);
+    const i = Number(search["i"]);
     return {
       b: Number.isFinite(b) && b > 0 ? Math.min(b, 6 * 3600_000) : 180_000,
       i: Number.isFinite(i) && i >= 0 ? Math.min(i, 120_000) : 2000,

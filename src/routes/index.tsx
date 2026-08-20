@@ -46,9 +46,11 @@ function Home() {
   const allPresets = PRESET_GROUPS.flatMap((g) => g.presets);
   const isCustom = selected === "custom";
   const customBase = minutes * 60_000 + seconds * 1000;
-  const chosen = isCustom
-    ? { baseMs: Math.max(1000, customBase), incrementMs: increment * 1000 }
-    : (allPresets.find((p) => p.id === selected) ?? allPresets[4]);
+  const preset = allPresets.find((p) => p.id === selected);
+  const chosen =
+    isCustom || !preset
+      ? { baseMs: Math.max(1000, customBase), incrementMs: increment * 1000 }
+      : { baseMs: preset.baseMs, incrementMs: preset.incrementMs };
 
   const startGame = () => {
     primeAudio();
