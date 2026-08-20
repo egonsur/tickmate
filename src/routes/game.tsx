@@ -267,7 +267,7 @@ function PlayerHalf({
 
       {active && (
         <span
-          className="pointer-events-none absolute inset-0 ring-8 ring-accent/40 ring-inset"
+          className="pointer-events-none absolute inset-0 ring-[6px] ring-accent ring-inset"
           aria-hidden
         />
       )}
