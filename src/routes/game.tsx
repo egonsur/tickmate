@@ -37,7 +37,7 @@ function GameScreen() {
   const { b, i } = Route.useSearch();
   const navigate = useNavigate();
   const [prefs, setPrefs] = useState<Prefs>({ sound: true, haptics: true });
-  const [confirmLeave, setConfirmLeave] = useState(false);
+  const [exitConfirm, setExitConfirm] = useState(false);
 
   useEffect(() => {
     setPrefs(loadPrefs());
