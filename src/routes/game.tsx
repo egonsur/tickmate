@@ -37,7 +37,7 @@ function GameScreen() {
   const { b, i } = Route.useSearch();
   const navigate = useNavigate();
   const [prefs, setPrefs] = useState<Prefs>({ sound: true, haptics: true });
-  const [confirmLeave, setConfirmLeave] = useState(false);
+  const [exitConfirm, setExitConfirm] = useState(false);
 
   useEffect(() => {
     setPrefs(loadPrefs());
@@ -57,11 +57,17 @@ function GameScreen() {
   const attemptLeave = () => {
     if (view.status === "NOT_STARTED" || finished) {
       goHome();
-    } else if (view.status === "PAUSED") {
-      setConfirmLeave(true);
     } else {
-      pause();
+      setExitConfirm(true);
+      if (view.status !== "PAUSED") {
+        pause();
+      }
     }
+  };
+
+  const resumeGame = () => {
+    setExitConfirm(false);
+    resume();
   };
 
   return (
@@ -71,7 +77,7 @@ function GameScreen() {
         ms={view.black}
         active={view.active === "black"}
         showStart={view.status === "NOT_STARTED"}
-        disabled={finished || paused || confirmLeave}
+        disabled={finished || paused || exitConfirm}
         increment={i}
         onPress={() => press("black")}
       />
@@ -83,7 +89,7 @@ function GameScreen() {
         <div className="flex h-full items-center">
           <button
             type="button"
-            onClick={paused ? resume : pause}
+            onClick={paused ? resumeGame : pause}
             disabled={finished || view.status === "NOT_STARTED"}
             className="h-full border-x border-border px-5 text-[10px] font-black tracking-widest uppercase transition-colors hover:bg-foreground hover:text-background disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-foreground"
           >
@@ -107,18 +113,18 @@ function GameScreen() {
         ms={view.white}
         active={view.active === "white"}
         showStart={false}
-        disabled={finished || paused || confirmLeave}
+        disabled={finished || paused || exitConfirm}
         increment={i}
         onPress={() => press("white")}
       />
 
-      {paused && (
+      {paused && !exitConfirm && (
         <Overlay>
           <p className="text-5xl font-black tracking-tighter uppercase">Paused</p>
           <div className="mt-8 flex flex-col gap-3">
             <button
               type="button"
-              onClick={resume}
+              onClick={resumeGame}
               className="border-2 border-background px-12 py-4 text-sm font-black tracking-[0.3em] uppercase"
             >
               Resume
@@ -134,23 +140,23 @@ function GameScreen() {
         </Overlay>
       )}
 
-      {confirmLeave && (
+      {exitConfirm && (
         <Overlay>
-          <p className="text-3xl font-black tracking-tighter uppercase">Leave game?</p>
-          <div className="mt-8 flex gap-3">
-            <button
-              type="button"
-              onClick={() => setConfirmLeave(false)}
-              className="border-2 border-background px-8 py-4 text-xs font-black tracking-[0.2em] uppercase"
-            >
-              Cancel
-            </button>
+          <p className="text-3xl font-black tracking-tighter uppercase">Exit game?</p>
+          <div className="mt-8 flex flex-col gap-3">
             <button
               type="button"
               onClick={goHome}
-              className="bg-accent px-8 py-4 text-xs font-black tracking-[0.2em] text-accent-foreground uppercase"
+              className="border-2 border-background px-16 py-5 text-sm font-black tracking-[0.3em] uppercase"
             >
-              Leave
+              Main screen
+            </button>
+            <button
+              type="button"
+              onClick={resumeGame}
+              className="px-12 py-2 text-[11px] font-bold tracking-widest uppercase opacity-60"
+            >
+              Resume
             </button>
           </div>
         </Overlay>
