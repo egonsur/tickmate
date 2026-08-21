@@ -57,11 +57,17 @@ function GameScreen() {
   const attemptLeave = () => {
     if (view.status === "NOT_STARTED" || finished) {
       goHome();
-    } else if (view.status === "PAUSED") {
-      setConfirmLeave(true);
     } else {
-      pause();
+      setExitConfirm(true);
+      if (view.status !== "PAUSED") {
+        pause();
+      }
     }
+  };
+
+  const resumeGame = () => {
+    setExitConfirm(false);
+    resume();
   };
 
   return (
@@ -71,7 +77,7 @@ function GameScreen() {
         ms={view.black}
         active={view.active === "black"}
         showStart={view.status === "NOT_STARTED"}
-        disabled={finished || paused || confirmLeave}
+        disabled={finished || paused || exitConfirm}
         increment={i}
         onPress={() => press("black")}
       />
@@ -83,7 +89,7 @@ function GameScreen() {
         <div className="flex h-full items-center">
           <button
             type="button"
-            onClick={paused ? resume : pause}
+            onClick={paused ? resumeGame : pause}
             disabled={finished || view.status === "NOT_STARTED"}
             className="h-full border-x border-border px-5 text-[10px] font-black tracking-widest uppercase transition-colors hover:bg-foreground hover:text-background disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-foreground"
           >
@@ -107,7 +113,7 @@ function GameScreen() {
         ms={view.white}
         active={view.active === "white"}
         showStart={false}
-        disabled={finished || paused || confirmLeave}
+        disabled={finished || paused || exitConfirm}
         increment={i}
         onPress={() => press("white")}
       />
