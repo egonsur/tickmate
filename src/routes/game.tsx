@@ -118,13 +118,13 @@ function GameScreen() {
         onPress={() => press("white")}
       />
 
-      {paused && (
+      {paused && !exitConfirm && (
         <Overlay>
           <p className="text-5xl font-black tracking-tighter uppercase">Paused</p>
           <div className="mt-8 flex flex-col gap-3">
             <button
               type="button"
-              onClick={resume}
+              onClick={resumeGame}
               className="border-2 border-background px-12 py-4 text-sm font-black tracking-[0.3em] uppercase"
             >
               Resume
@@ -140,23 +140,23 @@ function GameScreen() {
         </Overlay>
       )}
 
-      {confirmLeave && (
+      {exitConfirm && (
         <Overlay>
-          <p className="text-3xl font-black tracking-tighter uppercase">Leave game?</p>
-          <div className="mt-8 flex gap-3">
-            <button
-              type="button"
-              onClick={() => setConfirmLeave(false)}
-              className="border-2 border-background px-8 py-4 text-xs font-black tracking-[0.2em] uppercase"
-            >
-              Cancel
-            </button>
+          <p className="text-3xl font-black tracking-tighter uppercase">Exit game?</p>
+          <div className="mt-8 flex flex-col gap-3">
             <button
               type="button"
               onClick={goHome}
-              className="bg-accent px-8 py-4 text-xs font-black tracking-[0.2em] text-accent-foreground uppercase"
+              className="border-2 border-background px-16 py-5 text-sm font-black tracking-[0.3em] uppercase"
             >
-              Leave
+              Main screen
+            </button>
+            <button
+              type="button"
+              onClick={resumeGame}
+              className="px-12 py-2 text-[11px] font-bold tracking-widest uppercase opacity-60"
+            >
+              Resume
             </button>
           </div>
         </Overlay>
