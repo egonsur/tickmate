@@ -132,33 +132,34 @@ function Home() {
           </button>
 
           <div className="mt-2 grid grid-cols-3 gap-2">
-            <Stepper
+            <TypeableStepper
               label="Mins"
               value={minutes}
               min={0}
               max={MAX_MIN}
-              onChange={(v) => {
+              pad={3}
+              onChange={(v: number) => {
                 setMinutes(v);
                 setSelected("custom");
               }}
             />
-            <Stepper
+            <TypeableStepper
               label="Secs"
               value={seconds}
               min={0}
               max={59}
               step={5}
-              onChange={(v) => {
+              onChange={(v: number) => {
                 setSeconds(v);
                 setSelected("custom");
               }}
             />
-            <Stepper
+            <TypeableStepper
               label="Inc"
               value={increment}
               min={0}
               max={60}
-              onChange={(v) => {
+              onChange={(v: number) => {
                 setIncrement(v);
                 setSelected("custom");
               }}
@@ -193,13 +194,14 @@ function Home() {
   );
 }
 
-function Stepper({
+function TypeableStepper({
   label,
   value,
   min,
   max,
   step = 1,
   onChange,
+  pad = 2,
 }: {
   label: string;
   value: number;
@@ -207,8 +209,25 @@ function Stepper({
   max: number;
   step?: number;
   onChange: (value: number) => void;
+  pad?: number;
 }) {
   const clamp = (v: number) => Math.min(max, Math.max(min, v));
+  const [raw, setRaw] = useState(String(value).padStart(pad, "0"));
+  const [focused, setFocused] = useState(false);
+
+  useEffect(() => {
+    if (!focused) {
+      setRaw(String(value).padStart(pad, "0"));
+    }
+  }, [value, pad, focused]);
+
+  const commit = (text: string) => {
+    const parsed = parseInt(text.replace(/\D/g, ""), 10);
+    const next = clamp(Number.isNaN(parsed) ? 0 : parsed);
+    onChange(next);
+    setRaw(String(next).padStart(pad, "0"));
+  };
+
   return (
     <div className="border-2 border-border">
       <div className="border-b border-border py-1 text-center text-[8px] tracking-widest uppercase opacity-50">
@@ -223,9 +242,36 @@ function Stepper({
         >
           −
         </button>
-        <div className="text-center font-mono text-xl tabular-nums">
-          {String(value).padStart(2, "0")}
-        </div>
+        <input
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          aria-label={`${label} value`}
+          value={raw}
+          onFocus={(e) => {
+            setFocused(true);
+            e.target.select();
+          }}
+          onBlur={(e) => {
+            setFocused(false);
+            commit(e.target.value);
+          }}
+          onChange={(e) => {
+            const digits = e.target.value.replace(/\D/g, "").slice(0, pad);
+            setRaw(digits);
+            if (digits) {
+              const parsed = parseInt(digits, 10);
+              if (!Number.isNaN(parsed)) onChange(clamp(parsed));
+            }
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              commit((e.target as HTMLInputElement).value);
+              (e.target as HTMLInputElement).blur();
+            }
+          }}
+          className="w-full bg-transparent py-2 text-center font-mono text-xl tabular-nums outline-none focus:bg-foreground/5"
+        />
         <button
           type="button"
           aria-label={`Increase ${label}`}
