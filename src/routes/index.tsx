@@ -275,10 +275,7 @@ function TypeableStepper({
         <button
           type="button"
           aria-label={`Increase ${label}`}
-          onClick={() => {
-            console.log("increase", label, value, step, clamp(value + step));
-            onChange(clamp(value + step));
-          }}
+          onClick={() => onChange(clamp(value + step))}
           className="px-3 py-2 font-mono text-lg leading-none"
         >
           +
