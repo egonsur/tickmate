@@ -55,8 +55,13 @@ function GameScreen() {
   const goHome = () => void navigate({ to: "/" });
 
   const attemptLeave = () => {
-    if (view.status === "NOT_STARTED" || finished) goHome();
-    else setConfirmLeave(true);
+    if (view.status === "NOT_STARTED" || finished) {
+      goHome();
+    } else if (view.status === "PAUSED") {
+      setConfirmLeave(true);
+    } else {
+      pause();
+    }
   };
 
   return (
