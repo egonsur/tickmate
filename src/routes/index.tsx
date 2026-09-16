@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { PRESET_GROUPS, formatControl } from "@/lib/time-control";
 import { primeAudio } from "@/lib/feedback";
-import { loadPrefs, savePrefs, type Prefs } from "@/lib/prefs";
+import { loadPrefs, savePrefs, DEFAULT_CUSTOM, type Prefs } from "@/lib/prefs";
 
 export const Route = createFileRoute("/")({
   head: () => ({
