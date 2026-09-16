@@ -29,10 +29,11 @@ const MAX_MIN = 180;
 function Home() {
   const navigate = useNavigate();
   const [selected, setSelected] = useState("3+2");
-  const [minutes, setMinutes] = useState(7);
-  const [seconds, setSeconds] = useState(0);
-  const [increment, setIncrement] = useState(3);
-  const [prefs, setPrefs] = useState<Prefs>({ sound: true, haptics: true });
+  const [prefs, setPrefs] = useState<Prefs>({
+    sound: true,
+    haptics: true,
+    custom: DEFAULT_CUSTOM,
+  });
 
   useEffect(() => {
     setPrefs(loadPrefs());
@@ -41,6 +42,13 @@ function Home() {
   const updatePrefs = (next: Prefs) => {
     setPrefs(next);
     savePrefs(next);
+  };
+
+  // Single source of truth for the custom time control.
+  const { minutes, seconds, increment } = prefs.custom;
+  const setCustom = (patch: Partial<typeof prefs.custom>) => {
+    updatePrefs({ ...prefs, custom: { ...prefs.custom, ...patch } });
+    setSelected("custom");
   };
 
   const allPresets = PRESET_GROUPS.flatMap((g) => g.presets);
