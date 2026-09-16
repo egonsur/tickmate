@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { PRESET_GROUPS, formatControl } from "@/lib/time-control";
 import { primeAudio } from "@/lib/feedback";
-import { loadPrefs, savePrefs, type Prefs } from "@/lib/prefs";
+import { loadPrefs, savePrefs, DEFAULT_CUSTOM, type Prefs } from "@/lib/prefs";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -29,10 +29,11 @@ const MAX_MIN = 180;
 function Home() {
   const navigate = useNavigate();
   const [selected, setSelected] = useState("3+2");
-  const [minutes, setMinutes] = useState(7);
-  const [seconds, setSeconds] = useState(0);
-  const [increment, setIncrement] = useState(3);
-  const [prefs, setPrefs] = useState<Prefs>({ sound: true, haptics: true });
+  const [prefs, setPrefs] = useState<Prefs>({
+    sound: true,
+    haptics: true,
+    custom: DEFAULT_CUSTOM,
+  });
 
   useEffect(() => {
     setPrefs(loadPrefs());
@@ -41,6 +42,13 @@ function Home() {
   const updatePrefs = (next: Prefs) => {
     setPrefs(next);
     savePrefs(next);
+  };
+
+  // Single source of truth for the custom time control.
+  const { minutes, seconds, increment } = prefs.custom;
+  const setCustom = (patch: Partial<typeof prefs.custom>) => {
+    updatePrefs({ ...prefs, custom: { ...prefs.custom, ...patch } });
+    setSelected("custom");
   };
 
   const allPresets = PRESET_GROUPS.flatMap((g) => g.presets);
@@ -138,10 +146,7 @@ function Home() {
               min={0}
               max={MAX_MIN}
               pad={3}
-              onChange={(v: number) => {
-                setMinutes(v);
-                setSelected("custom");
-              }}
+              onChange={(v: number) => setCustom({ minutes: v })}
             />
             <TypeableStepper
               label="Secs"
@@ -149,20 +154,14 @@ function Home() {
               min={0}
               max={59}
               step={5}
-              onChange={(v: number) => {
-                setSeconds(v);
-                setSelected("custom");
-              }}
+              onChange={(v: number) => setCustom({ seconds: v })}
             />
             <TypeableStepper
               label="Inc"
               value={increment}
               min={0}
               max={60}
-              onChange={(v: number) => {
-                setIncrement(v);
-                setSelected("custom");
-              }}
+              onChange={(v: number) => setCustom({ increment: v })}
             />
           </div>
         </section>
@@ -212,20 +211,15 @@ function TypeableStepper({
   pad?: number;
 }) {
   const clamp = (v: number) => Math.min(max, Math.max(min, v));
-  const [raw, setRaw] = useState(String(value).padStart(pad, "0"));
-  const [focused, setFocused] = useState(false);
-
-  useEffect(() => {
-    if (!focused) {
-      setRaw(String(value).padStart(pad, "0"));
-    }
-  }, [value, pad, focused]);
+  // The prop is the only source of truth; `draft` exists only while typing.
+  const [draft, setDraft] = useState<string | null>(null);
+  const display = draft ?? String(value).padStart(pad, "0");
 
   const commit = (text: string) => {
     const parsed = parseInt(text.replace(/\D/g, ""), 10);
     const next = clamp(Number.isNaN(parsed) ? 0 : parsed);
     onChange(next);
-    setRaw(String(next).padStart(pad, "0"));
+    setDraft(null);
   };
 
   return (
@@ -246,19 +240,21 @@ function TypeableStepper({
           type="text"
           inputMode="numeric"
           pattern="[0-9]*"
+          autoComplete="off"
+          autoCorrect="off"
+          spellCheck={false}
           aria-label={`${label} value`}
-          value={raw}
+          value={display}
           onFocus={(e) => {
-            setFocused(true);
+            setDraft(e.target.value);
             e.target.select();
           }}
           onBlur={(e) => {
-            setFocused(false);
             commit(e.target.value);
           }}
           onChange={(e) => {
             const digits = e.target.value.replace(/\D/g, "").slice(0, pad);
-            setRaw(digits);
+            setDraft(digits);
             if (digits) {
               const parsed = parseInt(digits, 10);
               if (!Number.isNaN(parsed)) onChange(clamp(parsed));

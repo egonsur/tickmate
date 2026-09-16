@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { formatClock, formatControl } from "@/lib/time-control";
-import { loadPrefs, type Prefs } from "@/lib/prefs";
+import { loadPrefs, DEFAULT_CUSTOM, type Prefs } from "@/lib/prefs";
 import { useChessClock, type Side } from "@/hooks/use-chess-clock";
 import { useWakeLock } from "@/hooks/use-wake-lock";
 
@@ -36,7 +36,11 @@ export const Route = createFileRoute("/game")({
 function GameScreen() {
   const { b, i } = Route.useSearch();
   const navigate = useNavigate();
-  const [prefs, setPrefs] = useState<Prefs>({ sound: true, haptics: true });
+  const [prefs, setPrefs] = useState<Prefs>({
+    sound: true,
+    haptics: true,
+    custom: DEFAULT_CUSTOM,
+  });
   const [exitConfirm, setExitConfirm] = useState(false);
 
   useEffect(() => {
