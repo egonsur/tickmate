@@ -240,19 +240,21 @@ function TypeableStepper({
           type="text"
           inputMode="numeric"
           pattern="[0-9]*"
+          autoComplete="off"
+          autoCorrect="off"
+          spellCheck={false}
           aria-label={`${label} value`}
-          value={raw}
+          value={display}
           onFocus={(e) => {
-            setFocused(true);
+            setDraft(e.target.value);
             e.target.select();
           }}
           onBlur={(e) => {
-            setFocused(false);
             commit(e.target.value);
           }}
           onChange={(e) => {
             const digits = e.target.value.replace(/\D/g, "").slice(0, pad);
-            setRaw(digits);
+            setDraft(digits);
             if (digits) {
               const parsed = parseInt(digits, 10);
               if (!Number.isNaN(parsed)) onChange(clamp(parsed));
