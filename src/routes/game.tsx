@@ -36,7 +36,11 @@ export const Route = createFileRoute("/game")({
 function GameScreen() {
   const { b, i } = Route.useSearch();
   const navigate = useNavigate();
-  const [prefs, setPrefs] = useState<Prefs>({ sound: true, haptics: true });
+  const [prefs, setPrefs] = useState<Prefs>({
+    sound: true,
+    haptics: true,
+    custom: DEFAULT_CUSTOM,
+  });
   const [exitConfirm, setExitConfirm] = useState(false);
 
   useEffect(() => {

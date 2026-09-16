@@ -146,10 +146,7 @@ function Home() {
               min={0}
               max={MAX_MIN}
               pad={3}
-              onChange={(v: number) => {
-                setMinutes(v);
-                setSelected("custom");
-              }}
+              onChange={(v: number) => setCustom({ minutes: v })}
             />
             <TypeableStepper
               label="Secs"
@@ -157,20 +154,14 @@ function Home() {
               min={0}
               max={59}
               step={5}
-              onChange={(v: number) => {
-                setSeconds(v);
-                setSelected("custom");
-              }}
+              onChange={(v: number) => setCustom({ seconds: v })}
             />
             <TypeableStepper
               label="Inc"
               value={increment}
               min={0}
               max={60}
-              onChange={(v: number) => {
-                setIncrement(v);
-                setSelected("custom");
-              }}
+              onChange={(v: number) => setCustom({ increment: v })}
             />
           </div>
         </section>

@@ -30,14 +30,16 @@ export function validatePrefs(input: unknown): Prefs {
   if (!input || typeof input !== "object") return DEFAULTS;
   const raw = input as Record<string, unknown>;
   const rawCustom =
-    raw.custom && typeof raw.custom === "object" ? (raw.custom as Record<string, unknown>) : {};
+    raw["custom"] && typeof raw["custom"] === "object"
+      ? (raw["custom"] as Record<string, unknown>)
+      : {};
   return {
-    sound: typeof raw.sound === "boolean" ? raw.sound : DEFAULTS.sound,
-    haptics: typeof raw.haptics === "boolean" ? raw.haptics : DEFAULTS.haptics,
+    sound: typeof raw["sound"] === "boolean" ? raw["sound"] : DEFAULTS.sound,
+    haptics: typeof raw["haptics"] === "boolean" ? raw["haptics"] : DEFAULTS.haptics,
     custom: {
-      minutes: clampInt(rawCustom.minutes, 0, 180, DEFAULT_CUSTOM.minutes),
-      seconds: clampInt(rawCustom.seconds, 0, 59, DEFAULT_CUSTOM.seconds),
-      increment: clampInt(rawCustom.increment, 0, 60, DEFAULT_CUSTOM.increment),
+      minutes: clampInt(rawCustom["minutes"], 0, 180, DEFAULT_CUSTOM.minutes),
+      seconds: clampInt(rawCustom["seconds"], 0, 59, DEFAULT_CUSTOM.seconds),
+      increment: clampInt(rawCustom["increment"], 0, 60, DEFAULT_CUSTOM.increment),
     },
   };
 }
