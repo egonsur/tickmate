@@ -145,7 +145,7 @@ function Home() {
               value={minutes}
               min={0}
               max={MAX_MIN}
-              pad={3}
+              pad={2}
               onChange={(v: number) => setCustom({ minutes: v })}
             />
             <TypeableStepper
@@ -227,12 +227,12 @@ function TypeableStepper({
       <div className="border-b border-border py-1 text-center text-[8px] tracking-widest uppercase opacity-50">
         {label}
       </div>
-      <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center">
+      <div className="grid grid-cols-[1.75rem_minmax(0,1fr)_1.75rem] items-center">
         <button
           type="button"
           aria-label={`Decrease ${label}`}
           onClick={() => onChange(clamp(value - step))}
-          className="px-3 py-2 font-mono text-lg leading-none"
+          className="h-11 w-7 font-mono text-lg leading-none"
         >
           −
         </button>
@@ -266,13 +266,13 @@ function TypeableStepper({
               (e.target as HTMLInputElement).blur();
             }
           }}
-          className="w-full bg-transparent py-2 text-center font-mono text-xl tabular-nums outline-none focus:bg-foreground/5"
+          className="min-w-0 w-full bg-transparent py-2 text-center font-mono text-base tabular-nums outline-none focus:bg-foreground/5 sm:text-xl"
         />
         <button
           type="button"
           aria-label={`Increase ${label}`}
           onClick={() => onChange(clamp(value + step))}
-          className="px-3 py-2 font-mono text-lg leading-none"
+          className="h-11 w-7 font-mono text-lg leading-none"
         >
           +
         </button>
