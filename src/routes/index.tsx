@@ -211,20 +211,15 @@ function TypeableStepper({
   pad?: number;
 }) {
   const clamp = (v: number) => Math.min(max, Math.max(min, v));
-  const [raw, setRaw] = useState(String(value).padStart(pad, "0"));
-  const [focused, setFocused] = useState(false);
-
-  useEffect(() => {
-    if (!focused) {
-      setRaw(String(value).padStart(pad, "0"));
-    }
-  }, [value, pad, focused]);
+  // The prop is the only source of truth; `draft` exists only while typing.
+  const [draft, setDraft] = useState<string | null>(null);
+  const display = draft ?? String(value).padStart(pad, "0");
 
   const commit = (text: string) => {
     const parsed = parseInt(text.replace(/\D/g, ""), 10);
     const next = clamp(Number.isNaN(parsed) ? 0 : parsed);
     onChange(next);
-    setRaw(String(next).padStart(pad, "0"));
+    setDraft(null);
   };
 
   return (
